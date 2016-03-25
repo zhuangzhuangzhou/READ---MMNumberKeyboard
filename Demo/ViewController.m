@@ -24,14 +24,15 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     // Create and configure the keyboard.
-    MMNumberKeyboard *keyboard = [[MMNumberKeyboard alloc] initWithFrame:CGRectZero];
+    //MMNumberKeyboard *keyboard = [[MMNumberKeyboard alloc] initWithFrame:CGRectZero];
+    MMNumberKeyboard *keyboard = [[MMNumberKeyboard alloc]initWithFrame:CGRectZero inputViewStyle:UIInputViewStyleDefault];
     keyboard.allowsDecimalPoint = YES;
     keyboard.delegate = self;
     
     // Configure an example UITextField.
     UITextField *textField = [[UITextField alloc] initWithFrame:CGRectZero];
     textField.inputView = keyboard;
-    textField.text = @(123456789).stringValue;
+    textField.text = @(1234).stringValue;
     textField.placeholder = @"Type something…";
     textField.font = [UIFont systemFontOfSize:24.0f];
     textField.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;

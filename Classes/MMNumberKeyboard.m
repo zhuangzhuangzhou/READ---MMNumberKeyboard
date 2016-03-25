@@ -69,7 +69,7 @@ static const CGFloat MMNumberKeyboardPadBorder = 7.0f;
 static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
 
 #define UIKitLocalizedString(key) [[NSBundle bundleWithIdentifier:@"com.apple.UIKit"] localizedStringForKey:key value:@"" table:nil]
-
+//重写初始化方法
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame inputViewStyle:UIInputViewStyleKeyboard];
@@ -79,6 +79,7 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     return self;
 }
 
+//苹果公司终于公开了 UIInputView，其中提供了一种方式——使用 UIInputViewStyleKeyboard 来匹配键盘样式。这使得你能编写自定义的键盘或者适应默认样式的默认键盘的扩展（工具条）。这个类一开始就存在了，不过现在我们终于可以绕过私有API的方式来使用它了。
 - (instancetype)initWithFrame:(CGRect)frame inputViewStyle:(UIInputViewStyle)inputViewStyle
 {
     self = [super initWithFrame:frame inputViewStyle:inputViewStyle];
@@ -88,6 +89,7 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     return self;
 }
 
+//可以进行本地化的初始化方法
 - (instancetype)initWithFrame:(CGRect)frame inputViewStyle:(UIInputViewStyle)inputViewStyle locale:(NSLocale *)locale
 {
     self = [super initWithFrame:frame inputViewStyle:inputViewStyle];
@@ -124,8 +126,10 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
         
         [buttonDictionary setObject:button forKey:@(key)];
     }
-    
+
+    //清除
     UIImage *backspaceImage = [self.class _keyboardImageNamed:@"MMNumberKeyboardDeleteKey.png"];
+    //收起
     UIImage *dismissImage = [self.class _keyboardImageNamed:@"MMNumberKeyboardDismissKey.png"];
     
     UIButton *backspaceButton = [_MMNumberKeyboardButton keyboardButtonWithStyle:MMNumberKeyboardButtonStyleGray];
