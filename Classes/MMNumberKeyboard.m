@@ -191,6 +191,7 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
 
 #pragma mark - Input.
 
+// 手指不离开屏幕高亮
 - (void)_handleHighlightGestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer
 {
     CGPoint point = [gestureRecognizer locationInView:self];
