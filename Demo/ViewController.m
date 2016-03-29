@@ -26,8 +26,8 @@
     // Create and configure the keyboard.
     //MMNumberKeyboard *keyboard = [[MMNumberKeyboard alloc] initWithFrame:CGRectZero];
     MMNumberKeyboard *keyboard = [[MMNumberKeyboard alloc]initWithFrame:CGRectZero inputViewStyle:UIInputViewStyleDefault];
-    keyboard.allowsDecimalPoint = YES;
-    keyboard.delegate = self;
+    //keyboard.allowsDecimalPoint = YES;
+    //keyboard.delegate = self;
     
     // Configure an example UITextField.
     UITextField *textField = [[UITextField alloc] initWithFrame:CGRectZero];
@@ -44,11 +44,11 @@
 
 #pragma mark - MMNumberKeyboardDelegate.
 
-- (BOOL)numberKeyboardShouldReturn:(MMNumberKeyboard *)numberKeyboard
-{
-    // Do something with the done key if neeed. Return YES to dismiss the keyboard.
-    return YES;
-}
+//- (BOOL)numberKeyboardShouldReturn:(MMNumberKeyboard *)numberKeyboard
+//{
+//    // Do something with the done key if neeed. Return YES to dismiss the keyboard.
+//    return YES;
+//}
 
 #pragma mark - Layout.
 

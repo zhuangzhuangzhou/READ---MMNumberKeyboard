@@ -18,7 +18,7 @@ typedef NS_ENUM(NSUInteger, MMNumberKeyboardButton) {
     MMNumberKeyboardButtonNone = NSNotFound,
 };
 
-@interface MMNumberKeyboard () <UIInputViewAudioFeedback>
+@interface MMNumberKeyboard () <UIInputViewAudioFeedback>//声音？
 
 @property (strong, nonatomic) NSDictionary *buttonDictionary;
 @property (strong, nonatomic) NSMutableArray *separatorViews;
@@ -100,6 +100,8 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     return self;
 }
 
+
+//键盘按钮初始化
 - (void)_commonInit
 {
     NSMutableDictionary *buttonDictionary = [NSMutableDictionary dictionary];
@@ -215,6 +217,8 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     [[UIDevice currentDevice] playInputClick];
 }
 
+
+//按钮点击的各种方法
 - (void)_buttonInput:(UIButton *)button
 {
     __block MMNumberKeyboardButton keyboardButton = MMNumberKeyboardButtonNone;
@@ -230,9 +234,10 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     if (keyboardButton == MMNumberKeyboardButtonNone) {
         return;
     }
-    
+
+    //得到第一响应者
     // Get first responder.
-    id <UIKeyInput> keyInput = self.keyInput;
+    id <UIKeyInput> keyInput = self.keyInput;//重点
     id <MMNumberKeyboardDelegate> delegate = self.delegate;
     
     if (!keyInput) {
@@ -297,6 +302,7 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     }
 }
 
+//代理的方法 - 退格
 - (void)_backspaceRepeat:(UIButton *)button
 {
     id <UIKeyInput> keyInput = self.keyInput;
@@ -309,6 +315,8 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     [self _buttonInput:button];
 }
 
+
+// 代理的方法 - 输入
 - (id<UIKeyInput>)keyInput
 {
     id <UIKeyInput> keyInput = _keyInput;
@@ -475,7 +483,8 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
     const NSInteger numberMax = MMNumberKeyboardButtonNumberMax;
     
     const NSInteger numbersPerLine = 3;
-    
+
+    //
     for (MMNumberKeyboardButton key = numberMin; key < numberMax; key++) {
         UIButton *button = buttonDictionary[@(key)];
         NSInteger digit = key - numberMin;
@@ -626,7 +635,7 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
 
 + (UIImage *)_keyboardImageNamed:(NSString *)name
 {
-    NSString *resource = [name stringByDeletingPathExtension];
+    NSString *resource = [name stringByDeletingPathExtension];//路径标准化
     NSString *extension = [name pathExtension];
     
     if (resource) {
@@ -644,12 +653,16 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
 
 @end
 
+
+
+#pragma mark 按钮（组成部分）
+
 @interface _MMNumberKeyboardButton ()
 
 @property (strong, nonatomic) NSTimer *continuousPressTimer;
 @property (assign, nonatomic) NSTimeInterval continuousPressTimeInterval;
 
-@property (strong, nonatomic) UIColor *fillColor;
+@property (strong, nonatomic) UIColor *fillColor;//填充颜色
 @property (strong, nonatomic) UIColor *highlightedFillColor;
 
 @property (strong, nonatomic) UIColor *controlColor;
@@ -687,9 +700,20 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
 
 - (void)_buttonStyleDidChange
 {
-    const UIUserInterfaceIdiom interfaceIdiom = UI_USER_INTERFACE_IDIOM();
+    /*在编程时可以通过下面语句判断设备，常量UIUserInterfaceIdiomPhone 用于判断是否为iPhone设备，UIUserInterfaceIdiomPad用于判断是否为iPad设备。
+
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+    {
+        // iPhone设备
+    } else
+    {
+        // iPad 设备
+    }
+     */
+    const UIUserInterfaceIdiom interfaceIdiom = UI_USER_INTERFACE_IDIOM();//用来判断设备
     const MMNumberKeyboardButtonStyle style = self.style;
-    
+
+    //背景填充颜色
     UIColor *fillColor = nil;
     UIColor *highlightedFillColor = nil;
     if (style == MMNumberKeyboardButtonStyleWhite) {
@@ -697,16 +721,18 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
         highlightedFillColor = [UIColor colorWithRed:0.82f green:0.837f blue:0.863f alpha:1];
     } else if (style == MMNumberKeyboardButtonStyleGray) {
         if (interfaceIdiom == UIUserInterfaceIdiomPad) {
-            fillColor =  [UIColor colorWithRed:0.674f green:0.7f blue:0.744f alpha:1];
+            fillColor =  [UIColor redColor];//[UIColor colorWithRed:0.674f green:0.7f blue:0.744f alpha:1];
         } else {
-            fillColor = [UIColor colorWithRed:0.81f green:0.837f blue:0.86f alpha:1];
+            fillColor = [UIColor redColor];//[UIColor colorWithRed:0.81f green:0.837f blue:0.86f alpha:1];
         }
         highlightedFillColor = [UIColor whiteColor];
     } else if (style == MMNumberKeyboardButtonStyleDone) {
         fillColor = [UIColor colorWithRed:0 green:0.479f blue:1 alpha:1];
         highlightedFillColor = [UIColor whiteColor];
     }
-    
+
+
+    //字体颜色？
     UIColor *controlColor = nil;
     UIColor *highlightedControlColor = nil;
     if (style == MMNumberKeyboardButtonStyleDone) {
@@ -736,6 +762,7 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
     }
 }
 
+//将要被添加到window上
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
     [super willMoveToWindow:newWindow];
@@ -745,6 +772,7 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
     }
 }
 
+//被选中 更新状态
 - (void)_updateButtonAppearance
 {
     if (self.isHighlighted || self.isSelected) {
@@ -756,6 +784,7 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
     }
 }
 
+//重写set方法，用于更新被选中时候的状态
 - (void)setHighlighted:(BOOL)highlighted
 {
     [super setHighlighted:highlighted];
@@ -775,11 +804,11 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
     BOOL begins = [super beginTrackingWithTouch:touch withEvent:event];
-    const NSTimeInterval continuousPressTimeInterval = self.continuousPressTimeInterval;
+    //const NSTimeInterval continuousPressTimeInterval = self.continuousPressTimeInterval;
     
-    if (begins && continuousPressTimeInterval > 0) {
-        [self _beginContinuousPressDelayed];
-    }
+    //if (begins && continuousPressTimeInterval > 0) {
+    //    [self _beginContinuousPressDelayed];
+   // }
     
     return begins;
 }
@@ -803,7 +832,7 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
         return;
     }
     
-    self.continuousPressTimer = [NSTimer scheduledTimerWithTimeInterval:continuousPressTimeInterval target:self selector:@selector(_handleContinuousPressTimer:) userInfo:nil repeats:YES];
+   // self.continuousPressTimer = [NSTimer scheduledTimerWithTimeInterval:continuousPressTimeInterval target:self selector:@selector(_handleContinuousPressTimer:) userInfo:nil repeats:YES];
 }
 
 - (void)_handleContinuousPressTimer:(NSTimer *)timer
@@ -813,12 +842,12 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
         return;
     }
     
-    [self sendActionsForControlEvents:UIControlEventValueChanged];//发送动作 在ValueChanged时候
+   // [self sendActionsForControlEvents:UIControlEventValueChanged];//发送动作 在ValueChanged时候
 }
 
 - (void)_beginContinuousPressDelayed
 {
-    [self performSelector:@selector(_beginContinuousPress) withObject:nil afterDelay:self.continuousPressTimeInterval * 2.0f];
+    //[self performSelector:@selector(_beginContinuousPress) withObject:nil afterDelay:self.continuousPressTimeInterval * 2.0f];
 }
 
 - (void)_cancelContinousPressIfNeeded
