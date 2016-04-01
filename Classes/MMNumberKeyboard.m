@@ -79,7 +79,7 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     return self;
 }
 
-//苹果公司终于公开了 UIInputView，其中提供了一种方式——使用 UIInputViewStyleKeyboard 来匹配键盘样式。这使得你能编写自定义的键盘或者适应默认样式的默认键盘的扩展（工具条）。这个类一开始就存在了，不过现在我们终于可以绕过私有API的方式来使用它了。
+//苹果公司终于公开了 UIInputView，其中提供了一种方式——使用 UIInputViewStyleKeyboard 来匹配键盘样式。这使得你能编写自定义的键盘或者适应默认样式的默认键盘的扩展（工具条）。
 - (instancetype)initWithFrame:(CGRect)frame inputViewStyle:(UIInputViewStyle)inputViewStyle
 {
     self = [super initWithFrame:frame inputViewStyle:inputViewStyle];
@@ -142,15 +142,14 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     [buttonDictionary setObject:backspaceButton forKey:@(MMNumberKeyboardButtonBackspace)];
     
     UIButton *specialButton = [_MMNumberKeyboardButton keyboardButtonWithStyle:MMNumberKeyboardButtonStyleGray];
-    
     [buttonDictionary setObject:specialButton forKey:@(MMNumberKeyboardButtonSpecial)];
     
     UIButton *doneButton = [_MMNumberKeyboardButton keyboardButtonWithStyle:MMNumberKeyboardButtonStyleDone];
     [doneButton.titleLabel setFont:doneButtonFont];
     [doneButton setTitle:UIKitLocalizedString(@"Done") forState:UIControlStateNormal];
-    
     [buttonDictionary setObject:doneButton forKey:@(MMNumberKeyboardButtonDone)];
-    
+
+
     UIButton *decimalPointButton = [_MMNumberKeyboardButton keyboardButtonWithStyle:MMNumberKeyboardButtonStyleWhite];
     
     NSLocale *locale = self.locale ?: [NSLocale currentLocale];
@@ -161,7 +160,7 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     
     for (UIButton *button in buttonDictionary.objectEnumerator) {
         //设置按钮的排他性
-        [button setExclusiveTouch:YES];
+        //[button setExclusiveTouch:YES];
         [button addTarget:self action:@selector(_buttonInput:) forControlEvents:UIControlEventTouchUpInside];
         [button addTarget:self action:@selector(_buttonPlayClick:) forControlEvents:UIControlEventTouchDown];
         
@@ -326,7 +325,7 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     }
     
     keyInput = [UIResponder MM_currentFirstResponder];
-    if (![keyInput conformsToProtocol:@protocol(UITextInput)]) {
+    if (![keyInput conformsToProtocol:@protocol(UITextInput)]) {//是否遵守协议
         NSLog(@"Warning: First responder %@ does not conform to the UIKeyInput protocol.", keyInput);
         return nil;
     }
@@ -359,6 +358,7 @@ static const CGFloat MMNumberKeyboardPadSpacing = 8.0f;
     UIButton *button = self.buttonDictionary[@(MMNumberKeyboardButtonSpecial)];
     [button setImage:image forState:UIControlStateNormal];
 }
+
 
 - (void)configureSpecialKeyWithImage:(UIImage *)image target:(id)target action:(SEL)action
 {
@@ -805,7 +805,7 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
     BOOL begins = [super beginTrackingWithTouch:touch withEvent:event];
-    //const NSTimeInterval continuousPressTimeInterval = self.continuousPressTimeInterval;
+    const NSTimeInterval continuousPressTimeInterval = self.continuousPressTimeInterval;
     
     //if (begins && continuousPressTimeInterval > 0) {
     //    [self _beginContinuousPressDelayed];
@@ -817,12 +817,12 @@ NS_INLINE CGRect MMButtonRectMake(CGRect rect, CGRect contentRect, UIUserInterfa
 - (void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
     [super endTrackingWithTouch:touch withEvent:event];
-    [self _cancelContinousPressIfNeeded];
+    //[self _cancelContinousPressIfNeeded];
 }
 
 - (void)dealloc
 {
-    [self _cancelContinousPressIfNeeded];
+   // [self _cancelContinousPressIfNeeded];
 }
 
 - (void)_beginContinuousPress
